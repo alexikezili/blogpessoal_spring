@@ -118,4 +118,20 @@ public class UsuarioControllerTest {
 		
 	}
 	
+	@Test
+	@DisplayName("Deve buscar usuário por ID")
+	public void deveBuscarUsuarioId() {
+		
+		//Given
+		usuarioService.cadastrarUsuario(TestBuilder.criarUsuario(null, "Joao", "joao@email.com","12345678"));
+
+		//When
+		ResponseEntity<Usuario> resposta = testRestTemplate.withBasicAuth(USUARIO_ROOT_EMAIL, USUARIO_ROOT_SENHA)
+				.exchange(BASE_URL_USUARIOS + "/" + 2, HttpMethod.GET, null, Usuario.class);
+
+		//Then
+		assertEquals(HttpStatus.OK, resposta.getStatusCode());
+		assertEquals("Joao", resposta.getBody().getNome());
+		assertEquals("joao@email.com", resposta.getBody().getUsuario());
+	}
 }
